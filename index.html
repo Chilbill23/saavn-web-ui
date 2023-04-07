@@ -225,6 +225,25 @@ if ('permissions' in navigator) {
 }
 
 </script>
+<script>
+// Check if the browser supports notifications
+if ('Notification' in window) {
+  // Request permission to show notifications
+  Notification.requestPermission().then(function(result) {
+    if (result === 'denied') {
+      console.log('Notifications permission denied');
+    } else if (result === 'granted') {
+      console.log('Notifications permission granted');
+      // Show a notification
+      var notification = new Notification('Your App Name', {
+        body: 'Welcome to your web app!',
+        icon: '/path/to/your/icon.png'
+      });
+    }
+  });
+}
+
+</script>
 </body>
 
 </html>
