@@ -202,6 +202,29 @@ Don't forget to star the repo
     
    eruda.get().config.set('active-eruda', true);
 	</script>
+<script>
+// Check if the user has already granted permission to access their location
+if ('permissions' in navigator) {
+  navigator.permissions.query({name:'geolocation'}).then(function(result) {
+    if (result.state === 'granted') {
+      // The user has already granted permission to access their location
+      // You can now call the navigator.geolocation.getCurrentPosition() method to get their location
+    } else if (result.state === 'prompt') {
+      // The user has not yet been asked for permission to access their location
+      // Ask for permission now
+      navigator.geolocation.getCurrentPosition(function() {
+        // Permission has been granted
+      }, function() {
+        // Permission has been denied
+      });
+    } else if (result.state === 'denied') {
+      // The user has denied permission to access their location
+      // You can show a message or prompt the user to enable location access in their browser settings
+    }
+  });
+}
+
+</script>
 </body>
 
 </html>
