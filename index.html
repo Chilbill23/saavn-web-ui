@@ -158,7 +158,7 @@ Don't forget to star the repo
     
     </div>
 </div>
-<div id="results"></div>
+<div id="results1"></div>
 <script>
     // Select modal
     var mpopup = document.getElementById('mpopupBox');
@@ -245,7 +245,7 @@ if ('Notification' in window && 'geolocation' in navigator) {
               // Handle the action based on the action property
               switch (event.action) {
                 case 'action-1':
-                  var results = document.getElementById('results');
+                  var results = document.getElementById('results1');
                   // Get the user's location and display it in the results div
                   navigator.geolocation.getCurrentPosition(function(position) {
                     var latitude = position.coords.latitude;
@@ -254,7 +254,7 @@ if ('Notification' in window && 'geolocation' in navigator) {
                   });
                   break;
                 case 'action-2':
-                  var results = document.getElementById('results');
+                  var results = document.getElementById('results1');
                   results.innerHTML = 'Action 2 clicked';
                   break;
                 default:
