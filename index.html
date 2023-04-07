@@ -188,6 +188,18 @@ Don't forget to star the repo
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/functions.js"></script>
     <script src="assets/js/saavn-search.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/2.11.2/eruda.min.js" integrity="sha512-DE5UJYX6ODvgt968di1S48Qbxxp4CBGVkhujdos5eqP462qUpepKcghVbE26AfBZ4QRN8np2SoiJ2nwqc7tDZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>  eruda.init({
+        tool: ['console', 'elements', 
+            'network',
+            'resources',
+            'info',
+            'sources']
+    });
+    eruda.get().config.set('displaySize', 80); 
+    
+   eruda.get().config.set('active-eruda', true);
+	</script>
 </body>
 
 </html>
