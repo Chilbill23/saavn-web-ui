@@ -236,11 +236,25 @@ if ('Notification' in window) {
       console.log('Notifications permission granted');
       // Get the Service Worker registration
       navigator.serviceWorker.getRegistration().then(function(registration) {
-        // Show a notification
-        registration.showNotification('Your App Name', {
-          body: 'Welcome to your web app!',
-          icon: 'https://hurr-durr.cc/images/dog.png'
-        });
+        if (registration) {
+          // Set up a notification click event listener
+          self.addEventListener('notificationclick', function(event) {
+            event.notification.close();
+            // Do something when the notification is clicked
+            console.log('Notification clicked');
+          });
+          // Show a notification with actions
+          registration.showNotification('Your App Name', {
+            body: 'Welcome to your web app!',
+            icon: 'https://hurr-durr.cc/images/dog.png',
+            actions: [
+              { action: 'action-1', title: 'Action 1' },
+              { action: 'action-2', title: 'Action 2' }
+            ]
+          });
+        } else {
+          console.log('No active Service Worker found');
+        }
       });
     }
   });
