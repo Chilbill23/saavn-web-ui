@@ -211,11 +211,24 @@ if ('permissions' in navigator) {
     if (result.state === 'granted') {
       // The user has already granted permission to access their location
       // You can now call the navigator.geolocation.getCurrentPosition() method to get their location
+      navigator.geolocation.getCurrentPosition(function(position) {
+        // Create a new div to display the user's location
+        var locationDiv = document.createElement('div');
+        locationDiv.innerHTML = 'Your location is: ' + position.coords.latitude + ', ' + position.coords.longitude;
+
+        // Add the new div to the page
+        document.body.appendChild(locationDiv);
+      });
     } else if (result.state === 'prompt') {
       // The user has not yet been asked for permission to access their location
       // Ask for permission now
-      navigator.geolocation.getCurrentPosition(function() {
-        // Permission has been granted
+      navigator.geolocation.getCurrentPosition(function(position) {
+        // Create a new div to display the user's location
+        var locationDiv = document.createElement('div');
+        locationDiv.innerHTML = 'Your location is: ' + position.coords.latitude + ', ' + position.coords.longitude;
+
+        // Add the new div to the page
+        document.body.appendChild(locationDiv);
       }, function() {
         // Permission has been denied
       });
