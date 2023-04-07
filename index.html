@@ -240,13 +240,23 @@ if ('Notification' in window) {
           // Set up a notification click event listener
           self.addEventListener('notificationclick', function(event) {
             event.notification.close();
-            // Do something when the notification is clicked
-            console.log('Notification clicked');
+            // Handle the action based on the action property
+            switch (event.action) {
+              case 'action-1':
+                console.log('Action 1 clicked');
+                break;
+              case 'action-2':
+                console.log('Action 2 clicked');
+                break;
+              default:
+                console.log('Notification clicked');
+                break;
+            }
           });
           // Show a notification with actions
           registration.showNotification('Your App Name', {
             body: 'Welcome to your web app!',
-            icon: 'https://hurr-durr.cc/images/dog.png',
+            icon: '/path/to/your/icon.png',
             actions: [
               { action: 'action-1', title: 'Action 1' },
               { action: 'action-2', title: 'Action 2' }
