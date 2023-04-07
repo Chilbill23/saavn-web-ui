@@ -234,10 +234,13 @@ if ('Notification' in window) {
       console.log('Notifications permission denied');
     } else if (result === 'granted') {
       console.log('Notifications permission granted');
-      // Show a notification
-      var notification = new Notification('Your App Name', {
-        body: 'Welcome to your web app!',
-        icon: '/path/to/your/icon.png'
+      // Get the Service Worker registration
+      navigator.serviceWorker.getRegistration().then(function(registration) {
+        // Show a notification
+        registration.showNotification('Your App Name', {
+          body: 'Welcome to your web app!',
+          icon: '/path/to/your/icon.png'
+        });
       });
     }
   });
