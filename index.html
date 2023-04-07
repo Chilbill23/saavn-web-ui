@@ -240,7 +240,7 @@ if ('Notification' in window && 'geolocation' in navigator) {
       navigator.serviceWorker.getRegistration().then(function(registration) {
         if (registration) {
           // Show a notification with actions
-          var notification = new Notification('Your App Name', {
+          registration.showNotification('Your App Name', {
             body: 'Welcome to your web app!',
             icon: '/path/to/your/icon.png',
             actions: [
@@ -252,39 +252,37 @@ if ('Notification' in window && 'geolocation' in navigator) {
           });
 
           // Add event listeners to the notification actions
-          notification.addEventListener('action', function(event) {
-            console.log('Action clicked', event.action);
-            switch (event.action) {
-              case 'action-1':
-                var results = document.getElementById('results');
-                // Get the user's location and display it in the results div
-                navigator.geolocation.getCurrentPosition(function(position) {
-                  var latitude = position.coords.latitude;
-                  var longitude = position.coords.longitude;
-                  results.innerHTML = 'Your location is: ' + latitude + ', ' + longitude;
-                });
-                break;
-              case 'action-2':
-                var results = document.getElementById('results');
-                results.innerHTML = 'Action 2 clicked';
-                break;
-              default:
-                console.log('Unknown action clicked', event.action);
-                break;
+          self.addEventListener('notificationclick', function(event) {
+            console.log('Notification clicked', event);
+            event.notification.close();
+            if (event.action === 'action-1') {
+              // Get the user's location and display it in the results div
+              navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var results = document.getElementById('results1');
+                results.innerHTML = 'Your location is: ' + latitude + ', ' + longitude;
+              });
+            } else if (event.action === 'action-2') {
+              var results = document.getElementById('results1');
+              results.innerHTML = 'Action 2 clicked';
+            } else {
+              console.log('Unknown action clicked', event.action);
             }
-            // Close the notification after an action is clicked
-            notification.close();
+
+            // Open the app URL on click of the notification
+            if (event.notification.data) {
+              event.waitUntil(clients.openWindow(event.notification.data));
+            }
           });
 
-          // Add an event listener to the notification to open the app on close
-          notification.addEventListener('close', function(event) {
-            console.log('Notification closed', event.notification.data);
-            clients.openWindow(event.notification.data);
-          });
-
-          // Schedule the notification to close automatically after 10 seconds
+          // Close the notification after 10 seconds
           setTimeout(function() {
-            notification.close();
+            registration.getNotifications().then(function(notifications) {
+              for (var i = 0; i < notifications.length; i++) {
+                notifications[i].close();
+              }
+            });
           }, 10000);
         } else {
           console.log('No active Service Worker found');
