@@ -239,36 +239,8 @@ if ('Notification' in window && 'geolocation' in navigator) {
       // Get the Service Worker registration
       navigator.serviceWorker.getRegistration().then(function(registration) {
         if (registration) {
-          // Set up a notification click event listener
-          self.addEventListener('notificationclick', function(event) {
-            event.notification.close();
-            if (event.action) {
-              // Handle the action based on the action property
-              switch (event.action) {
-                case 'action-1':
-                  var results = document.getElementById('results1');
-                  // Get the user's location and display it in the results div
-                  navigator.geolocation.getCurrentPosition(function(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
-                    results.innerHTML = 'Your location is: ' + latitude + ', ' + longitude;
-                  });
-                  break;
-                case 'action-2':
-                  var results = document.getElementById('results1');
-                  results.innerHTML = 'Action 2 clicked';
-                  break;
-                default:
-                  console.log('Notification clicked');
-                  break;
-              }
-            } else if (event.notification.data) {
-              // Open the app on notification close
-              clients.openWindow(event.notification.data);
-            }
-          });
           // Show a notification with actions
-          registration.showNotification('Your App Name', {
+          var notification = new Notification('Your App Name', {
             body: 'Welcome to your web app!',
             icon: '/path/to/your/icon.png',
             actions: [
@@ -278,6 +250,42 @@ if ('Notification' in window && 'geolocation' in navigator) {
             // Add the URL of your app to the data property
             data: 'https://your-app-url.com'
           });
+
+          // Add event listeners to the notification actions
+          notification.addEventListener('action', function(event) {
+            console.log('Action clicked', event.action);
+            switch (event.action) {
+              case 'action-1':
+                var results = document.getElementById('results');
+                // Get the user's location and display it in the results div
+                navigator.geolocation.getCurrentPosition(function(position) {
+                  var latitude = position.coords.latitude;
+                  var longitude = position.coords.longitude;
+                  results.innerHTML = 'Your location is: ' + latitude + ', ' + longitude;
+                });
+                break;
+              case 'action-2':
+                var results = document.getElementById('results');
+                results.innerHTML = 'Action 2 clicked';
+                break;
+              default:
+                console.log('Unknown action clicked', event.action);
+                break;
+            }
+            // Close the notification after an action is clicked
+            notification.close();
+          });
+
+          // Add an event listener to the notification to open the app on close
+          notification.addEventListener('close', function(event) {
+            console.log('Notification closed', event.notification.data);
+            clients.openWindow(event.notification.data);
+          });
+
+          // Schedule the notification to close automatically after 10 seconds
+          setTimeout(function() {
+            notification.close();
+          }, 10000);
         } else {
           console.log('No active Service Worker found');
         }
