@@ -158,6 +158,7 @@ Don't forget to star the repo
     
     </div>
 </div>
+<div id="results"></div>
 <script>
     // Select modal
     var mpopup = document.getElementById('mpopupBox');
@@ -226,8 +227,8 @@ if ('permissions' in navigator) {
 
 </script>
 <script>
-// Check if the browser supports notifications
-if ('Notification' in window) {
+// Check if the browser supports notifications and geolocation
+if ('Notification' in window && 'geolocation' in navigator) {
   // Request permission to show notifications
   Notification.requestPermission().then(function(result) {
     if (result === 'denied') {
@@ -240,17 +241,29 @@ if ('Notification' in window) {
           // Set up a notification click event listener
           self.addEventListener('notificationclick', function(event) {
             event.notification.close();
-            // Handle the action based on the action property
-            switch (event.action) {
-              case 'action-1':
-                console.log('Action 1 clicked');
-                break;
-              case 'action-2':
-                console.log('Action 2 clicked');
-                break;
-              default:
-                console.log('Notification clicked');
-                break;
+            if (event.action) {
+              // Handle the action based on the action property
+              switch (event.action) {
+                case 'action-1':
+                  var results = document.getElementById('results');
+                  // Get the user's location and display it in the results div
+                  navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    results.innerHTML = 'Your location is: ' + latitude + ', ' + longitude;
+                  });
+                  break;
+                case 'action-2':
+                  var results = document.getElementById('results');
+                  results.innerHTML = 'Action 2 clicked';
+                  break;
+                default:
+                  console.log('Notification clicked');
+                  break;
+              }
+            } else if (event.notification.data) {
+              // Open the app on notification close
+              clients.openWindow(event.notification.data);
             }
           });
           // Show a notification with actions
@@ -258,9 +271,11 @@ if ('Notification' in window) {
             body: 'Welcome to your web app!',
             icon: '/path/to/your/icon.png',
             actions: [
-              { action: 'action-1', title: 'Action 1' },
+              { action: 'action-1', title: 'Get Location' },
               { action: 'action-2', title: 'Action 2' }
-            ]
+            ],
+            // Add the URL of your app to the data property
+            data: 'https://your-app-url.com'
           });
         } else {
           console.log('No active Service Worker found');
@@ -268,6 +283,8 @@ if ('Notification' in window) {
       });
     }
   });
+} else {
+  console.log('Notifications or Geolocation not supported');
 }
 
 </script>
